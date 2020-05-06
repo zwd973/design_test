@@ -1,4 +1,5 @@
-#include "PCB.h"
+#include "ProcessManager.h"
+#include "DeviceManager.h"
 #include<list>
 #include<string>
 #include<vector>
@@ -101,15 +102,26 @@ PCB* nextProcess()
     }
 }
 
+// 使用设备
+int useDevice(PCB* pcb,const char* device_name, int time_cost)
+{
+
+    if(toUseDevice(pcb,device_name,time_cost)!=ERROR_CODE){
+        removePCB(pcb);
+        return 0;
+    }
+    return ERROR_CODE;
+}
+
 const char* getProcessInfo() {
     static std::string  process_ui_info;
     std::vector<std::pair<int,std::string>> processes_info;
     char buff[1024];
     process_ui_info.clear();
-    sprintf(buff, "\nPID\tMemory\tS\tRuningTime(ms)\n");
+    sprintf(buff, "\nPID\tMemory\t  State\t\tRuningTime(ms)\n");
     process_ui_info += buff;
     for (PCB* p:runing_processes) {
-        sprintf(buff, "%d\t%-4d\tr\t%d\n", p->pid, 0, p->total_run_time);
+        sprintf(buff, "%d\t%-4d\t%8s\t\t%d\n", p->pid, 0, "runing",p->total_run_time);
         std::pair<int,std::string> item(p->pid,buff);
         processes_info.push_back(item);
     }
@@ -118,6 +130,7 @@ const char* getProcessInfo() {
     {
         process_ui_info+=item.second;
     }
+    process_ui_info += getDeviceUseInfo();
     return process_ui_info.c_str();
 }
 
