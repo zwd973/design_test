@@ -25,7 +25,7 @@ int systemPrintf(const char* format, ...)
     va_list args;
     va_start(args, format);
     int ret = vsprintf(buffer, format, args);
-    va_end(args, format);
+    va_end(args);
     output_buffer += buffer;
     return ret;
 }

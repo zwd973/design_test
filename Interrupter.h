@@ -1,5 +1,5 @@
 #pragma once
-typedef enum {CREATE_PROCESS,KILL,CREATE_FILE,ECHO,LIST_PROCESS} Interrupr_id;
+typedef enum {CREATE_PROCESS,KILL,CREATE_FILE,ECHO,LIST_PROCESS,TIMER_INTERRUPT} Interrupr_id;
 typedef struct
 {
     Interrupr_id i_id;

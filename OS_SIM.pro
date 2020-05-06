@@ -20,6 +20,7 @@ SOURCES += \
     InterrupterManager.cpp \
     ProcessManager.cpp \
     SystemPrint.cpp \
+    SystemTimer.cpp \
     VM.cpp \
     main.cpp \
     mainwindow.cpp
@@ -28,6 +29,7 @@ HEADERS += \
     Interrupter.h \
     PCB.h \
     SystemPrint.h \
+    SystemTimer.h \
     mainwindow.h
 
 FORMS += \
