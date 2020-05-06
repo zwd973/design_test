@@ -1,7 +1,8 @@
-#include "Interrupter.h"
-#include "PCB.h"
+#include "InterruptManager.h"
+#include "ProcessManager.h"
 #include "SystemPrint.h"
 #include "SystemTimer.h"
+#include "DeviceManager.h"
 #include <iostream>
 #include <windows.h>
 #include <time.h>
@@ -87,9 +88,9 @@ static void execute()
     // 跳过空字段
     while (*pc_ptr&&SPACE(*pc_ptr)) pc_ptr++;
     if (!*pc_ptr) goto code_error;
-    int time_cost, device_id,line_id,src1,src2,dest;
+    int time_cost,line_id,src1,src2,dest;
     long number;
-    char op, buff[1024];
+    char op, buff[1024],device_name[256];
     switch (*pc_ptr)
     {
     case OPERATION:
@@ -102,11 +103,15 @@ static void execute()
         MOVE_PC();
         break;
     case IO:
-        sscanf(pc_ptr, "%c %d %d", &op, &device_id,&time_cost);
+        sscanf(pc_ptr, "%c %s %d", &op, &device_name,&time_cost);
         // 移动pc
         MOVE_PC();
-        // 将进程移入等待队列
-        // 交互进程
+        // 使用设备
+        if(useDevice(cur_pcb,device_name,time_cost)==ERROR_CODE){
+            systemPrintf("Unknow device to use in process %d\n",cur_pcb->pid);
+            goto code_error;
+        }
+        // 交换进程
         swapProcess();
         break;
     case GOTO:
@@ -204,7 +209,7 @@ code_error:
 
 void VM()
 {
-    startTimer(10000,excuteTest,(void*)"This is a test");
+    initDeviceManagr();
     while (not_exit)
     {
         long start = clock();
@@ -229,4 +234,5 @@ void VM()
             Sleep(10-interval);
         }
     }
+    deInitDeviceManager();
 }

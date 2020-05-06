@@ -17,6 +17,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     Command.cpp \
+    DeviceManager.cpp \
     InterrupterManager.cpp \
     ProcessManager.cpp \
     SystemPrint.cpp \
@@ -26,8 +27,9 @@ SOURCES += \
     mainwindow.cpp
 
 HEADERS += \
-    Interrupter.h \
-    PCB.h \
+    DeviceManager.h \
+    InterruptManager.h \
+    ProcessManager.h \
     SystemPrint.h \
     SystemTimer.h \
     mainwindow.h
