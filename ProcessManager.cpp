@@ -3,34 +3,10 @@
 #include<string>
 #include<vector>
 #include<algorithm>
+#include<time.h>
 static std::list<PCB*> runing_processes;
 static int pcb_count=0;
 
-// 根据进程指令新建进程，传入参数为进程指令
-int createProcess(const char * code)
-{
-    PCB* pcb = new PCB;
-    if (pcb == NULL)
-        return -1;
-    pcb->code = code;
-    pcb->pc = 0;
-    // 此处调用内存管理API申请资源，申请失败则创建进程失败，失败时务必释放资源
-    pcb->memory = NULL;
-    pcb->pid = pcb_count;
-    pcb->time_cost = 0;
-    pcb->total_run_time = 0;
-    runing_processes.push_back(pcb);
-    pcb_count++;
-    return 0;
-}
-
-// 销毁PCB
-void destroyPCB(PCB* pcb)
-{
-    // 此处增加释放其它资源的操作，比如内存
-    delete pcb->code;
-    delete pcb;
-}
 
 // 从进程id返回PCB
 PCB* getPCB(int pid)
@@ -46,6 +22,47 @@ PCB* getPCB(int pid)
     return NULL;
 }
 
+static int alloc_pid()
+{
+    static bool is_set_seed = false;
+    if(!is_set_seed){
+      is_set_seed = true;
+      srand(time(NULL));
+    }
+    int pid = 0;
+    while(getPCB(pid=1000+rand()%1000));
+    return pid;
+}
+
+// 根据进程指令新建进程，传入参数为进程指令
+int createProcess(const char * code)
+{
+    PCB* pcb = new PCB;
+    if (pcb == NULL)
+        return -1;
+    pcb->code = code;
+    pcb->pc = 0;
+    // 此处调用内存管理API申请资源，申请失败则创建进程失败，失败时务必释放资源
+    pcb->memory = NULL;
+    pcb->pid = alloc_pid();
+    pcb->time_cost = 0;
+    pcb->total_run_time = 0;
+    runing_processes.push_back(pcb);
+    pcb_count++;
+    return 0;
+}
+
+// 销毁PCB
+void destroyPCB(PCB* pcb)
+{
+    // 此处增加释放其它资源的操作，比如内存
+    pcb_count--;
+    delete pcb->code;
+    delete pcb;
+}
+
+
+
 // 杀死pcb指向进程
 int killProcess(PCB* pcb)
 {
@@ -53,7 +70,6 @@ int killProcess(PCB* pcb)
     if (pcb == NULL) return 0;
         runing_processes.remove(pcb);
         destroyPCB(pcb);
-        pcb_count--;
         return 0;
 }
 

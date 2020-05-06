@@ -12,7 +12,7 @@ MainWindow::MainWindow(QWidget *parent)
     //ui_rest = ui;
     timer_output_flush = new QTimer(this);
     connect(timer_output_flush,SIGNAL(timeout()),SLOT(updateText()));
-    timer_output_flush->start(500);
+    timer_output_flush->start(50);
 
 
     //connect();

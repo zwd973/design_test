@@ -12,13 +12,13 @@ static char* tptr,*fptr;
 static Interrupr_id i_id;
 static void* inter_args;
 static const int  command_nums = 2;
-static const char* commands_table[] = { "create","kill" ,"ls"};
+//static const char* commands_table[] = { "create","kill" ,"ps"};
 Interrupr_id getIntID(const char * s) {
     if (strcmp(s, "create") == 0)
         return CREATE_PROCESS;
     else if (strcmp(s, "kill") == 0)
         return KILL;
-    else if (strcmp(s, "ls") == 0)
+    else if (strcmp(s, "ps") == 0)
         return LIST_PROCESS;
     return (Interrupr_id)ERROR_CODE;
 }

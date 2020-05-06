@@ -1,8 +1,10 @@
 #include "Interrupter.h"
 #include "PCB.h"
 #include "SystemPrint.h"
+#include "SystemTimer.h"
 #include <iostream>
 #include <windows.h>
+#include <time.h>
 using namespace std;
 
 static PCB* cur_pcb=NULL;
@@ -202,8 +204,10 @@ code_error:
 
 void VM()
 {
+    startTimer(10000,excuteTest,(void*)"This is a test");
     while (not_exit)
     {
+        long start = clock();
         bufferLock();
         time_slot -= 10;
         if (cur_pcb)
@@ -215,9 +219,14 @@ void VM()
         {
             swapProcess();
         }
+        // 计时器刷新
+        updateTimer(10);
         // 中断处理
         handInterrupt();
         bufferUnlock();
-        Sleep(10);
+        long interval = clock() - start;
+        if(interval<10){
+            Sleep(10-interval);
+        }
     }
 }
