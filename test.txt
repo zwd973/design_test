@@ -1,4 +1,4 @@
 This is only a test.
 master
-branch3 and 4
+branch4
 add branch2
