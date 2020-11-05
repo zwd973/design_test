@@ -1,6 +1,6 @@
 This is only a test.
 master
-branch4
+branch3
 add branch2
 =======
 branch3
